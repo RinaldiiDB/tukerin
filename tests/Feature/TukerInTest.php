@@ -2,81 +2,20 @@
 
 namespace Tests\Feature;
 
-use App\Models\BottleType;
-use App\Models\Role;
-use App\Models\User;
-use App\Models\UserProfile;
 use App\Models\ExchangeTransaction;
 use App\Models\RedemptionRequest;
+use App\Models\User;
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Hash;
 use Tests\TestCase;
 
 class TukerInTest extends TestCase
 {
-    use RefreshDatabase;
-
-    private $adminRole;
-    private $employeeRole;
-    private $userRole;
-
-    private $adminUser;
-    private $employeeUser;
-    private $normalUser;
-
-    private $bottle1;
-    private $bottle2;
+    use RefreshDatabase, CreatesTestFixtures;
 
     protected function setUp(): void
     {
         parent::setUp();
-
-        // 1. Seed Roles
-        $this->adminRole = Role::create(['name' => 'admin', 'label' => 'Admin']);
-        $this->employeeRole = Role::create(['name' => 'employee', 'label' => 'Pegawai']);
-        $this->userRole = Role::create(['name' => 'user', 'label' => 'User']);
-
-        // 2. Seed Users
-        $this->adminUser = User::create([
-            'name' => 'Admin Test',
-            'email' => 'admin@test.com',
-            'password' => Hash::make('password'),
-            'role_id' => $this->adminRole->id,
-        ]);
-
-        $this->employeeUser = User::create([
-            'name' => 'Employee Test',
-            'email' => 'employee@test.com',
-            'password' => Hash::make('password'),
-            'role_id' => $this->employeeRole->id,
-        ]);
-
-        $this->normalUser = User::create([
-            'name' => 'Nasabah Test',
-            'email' => 'user@test.com',
-            'password' => Hash::make('password'),
-            'role_id' => $this->userRole->id,
-        ]);
-
-        UserProfile::create([
-            'user_id' => $this->normalUser->id,
-            'phone' => '0812345678',
-            'qr_code' => 'TK-TEST1234',
-            'points_balance' => 100, // start with 100 points for test
-        ]);
-
-        // 3. Seed Bottle Types
-        $this->bottle1 = BottleType::create([
-            'name' => 'Botol Kecil',
-            'barcode' => '11111',
-            'points_value' => 10,
-        ]);
-
-        $this->bottle2 = BottleType::create([
-            'name' => 'Botol Besar',
-            'barcode' => '22222',
-            'points_value' => 25,
-        ]);
+        $this->setUpFixtures();
     }
 
     /**
@@ -86,6 +25,42 @@ class TukerInTest extends TestCase
     {
         $response = $this->get('/user/dashboard');
         $response->assertRedirect('/login');
+    }
+
+    /**
+     * Test that unauthenticated users visiting root are redirected to login.
+     */
+    public function test_guest_redirected_to_login_when_visiting_root()
+    {
+        $response = $this->get('/');
+        $response->assertRedirect(route('login'));
+    }
+
+    /**
+     * Test that a Nasabah visiting root is redirected to user dashboard.
+     */
+    public function test_user_redirected_to_dashboard_when_visiting_root()
+    {
+        $response = $this->actingAs($this->normalUser)->get('/');
+        $response->assertRedirect(route('user.dashboard'));
+    }
+
+    /**
+     * Test that an Employee visiting root is redirected to employee dashboard.
+     */
+    public function test_employee_redirected_to_dashboard_when_visiting_root()
+    {
+        $response = $this->actingAs($this->employeeUser)->get('/');
+        $response->assertRedirect(route('employee.dashboard'));
+    }
+
+    /**
+     * Test that an Admin visiting root is redirected to admin dashboard.
+     */
+    public function test_admin_redirected_to_dashboard_when_visiting_root()
+    {
+        $response = $this->actingAs($this->adminUser)->get('/');
+        $response->assertRedirect(route('admin.dashboard'));
     }
 
     /**
@@ -102,7 +77,7 @@ class TukerInTest extends TestCase
         ]);
 
         $response->assertRedirect('/user/dashboard');
-        
+
         $this->assertDatabaseHas('users', [
             'email' => 'newcustomer@test.com',
             'role_id' => $this->userRole->id,
@@ -174,9 +149,9 @@ class TukerInTest extends TestCase
 
         // Total points earned: 80 points. Original user points: 100 points.
         $response = $this->actingAs($this->employeeUser)->post('/employee/transactions', $payload);
-        
+
         $response->assertRedirect('/employee/dashboard');
-        
+
         $this->assertDatabaseHas('user_profiles', [
             'user_id' => $this->normalUser->id,
             'points_balance' => 180,
@@ -210,9 +185,9 @@ class TukerInTest extends TestCase
             'bank_name' => 'GoPay',
             'recipient_account' => '0812345678',
         ]);
-        
+
         $response->assertRedirect('/user/rewards');
-        
+
         // Assert points remain 100
         $this->normalUser->profile->refresh();
         $this->assertEquals(100, $this->normalUser->profile->points_balance);
@@ -242,9 +217,9 @@ class TukerInTest extends TestCase
 
         // Approve redemption
         $response = $this->actingAs($this->adminUser)->post('/admin/redemptions/' . $redemption->id . '/approve');
-        
+
         $response->assertRedirect('/admin/redemptions');
-        
+
         // Assert status changed to approved
         $redemption->refresh();
         $this->assertEquals('approved', $redemption->status);
@@ -274,9 +249,9 @@ class TukerInTest extends TestCase
         $response = $this->actingAs($this->adminUser)->post('/admin/redemptions/' . $redemption->id . '/reject', [
             'rejection_note' => 'Dokumen rekening tidak cocok dengan nama nasabah.',
         ]);
-        
+
         $response->assertRedirect('/admin/redemptions');
-        
+
         // Assert status changed to rejected and note recorded
         $redemption->refresh();
         $this->assertEquals('rejected', $redemption->status);

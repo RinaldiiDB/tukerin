@@ -5,10 +5,23 @@ use App\Http\Controllers\AdminEmployeeController;
 use App\Http\Controllers\AuthController;
 use App\Http\Controllers\EmployeeController;
 use App\Http\Controllers\UserController;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\Route;
 
-// Redirect root to login
+// Redirect root based on authentication status
 Route::get('/', function () {
+    if (Auth::check()) {
+        $user = Auth::user();
+        if ($user->isAdmin()) {
+            return redirect()->route('admin.dashboard');
+        } elseif ($user->isEmployee()) {
+            return redirect()->route('employee.dashboard');
+        } elseif ($user->isUser()) {
+            return redirect()->route('user.dashboard');
+        }
+        Auth::logout();
+        return redirect()->route('login')->with('error', 'Role tidak valid.');
+    }
     return redirect()->route('login');
 });
 
