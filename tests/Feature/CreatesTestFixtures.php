@@ -56,15 +56,17 @@ trait CreatesTestFixtures
         ]);
 
         $this->bottle1 = BottleType::create([
-            'name' => 'Botol Kecil',
+            'name' => 'Botol PET Aqua 600ml',
             'barcode' => '11111',
+            'description' => 'Botol air mineral Aqua PET bening 600ml',
             'points_value' => 10,
         ]);
 
         $this->bottle2 = BottleType::create([
-            'name' => 'Botol Besar',
+            'name' => 'Botol PET Coca-Cola 390ml',
             'barcode' => '22222',
-            'points_value' => 25,
+            'description' => 'Botol plastik Coca-Cola 390ml',
+            'points_value' => 8,
         ]);
     }
 }

@@ -66,7 +66,7 @@
     </div>
 
     <!-- Administrative Quick Access -->
-    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+    <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-3 gap-6">
         <!-- CRUD Pegawai -->
         <a href="{{ route('admin.employees.index') }}" class="group bg-white border border-slate-200/60 hover:border-emerald-200 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all duration-200">
             <div class="w-10 h-10 rounded-xl bg-slate-50 text-slate-500 group-hover:bg-emerald-50 group-hover:text-emerald-600 flex items-center justify-center transition-colors">
@@ -76,6 +76,17 @@
             </div>
             <h3 class="text-base font-bold text-slate-800 mt-4">Kelola Pegawai</h3>
             <p class="text-xs text-slate-400 font-medium mt-1">Tambah, edit, dan hapus akun operator lapangan.</p>
+        </a>
+
+        <!-- CRUD Jenis Botol -->
+        <a href="{{ route('admin.bottle-types.index') }}" class="group bg-white border border-slate-200/60 hover:border-emerald-200 rounded-3xl p-6 shadow-sm hover:shadow-md transition-all duration-200">
+            <div class="w-10 h-10 rounded-xl bg-slate-50 text-slate-500 group-hover:bg-emerald-50 group-hover:text-emerald-600 flex items-center justify-center transition-colors">
+                <svg class="w-5.5 h-5.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
+                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M19.428 15.428a2 2 0 00-1.022-.547l-2.387-.477a6 6 0 00-3.86.517l-.318.158a6 6 0 01-3.86.517L6.05 15.21a2 2 0 00-1.806.547M8 4h8l-1 1v5.172a2 2 0 00.586 1.414l5 5c1.26 1.26.367 3.414-1.415 3.414H4.828c-1.782 0-2.674-2.154-1.414-3.414l5-5A2 2 0 009 10.172V5L8 4z"></path>
+                </svg>
+            </div>
+            <h3 class="text-base font-bold text-slate-800 mt-4">Kelola Jenis Botol</h3>
+            <p class="text-xs text-slate-400 font-medium mt-1">Atur kategori botol plastik, barcode, dan nilai poin.</p>
         </a>
 
         <!-- Nasabah List -->

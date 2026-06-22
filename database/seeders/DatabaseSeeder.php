@@ -26,32 +26,60 @@ class DatabaseSeeder extends Seeder
         $userRole = Role::create(['name' => 'user', 'label' => 'User']);
 
         // 2. Seed Bottle Types
-        $petKecil = BottleType::create([
-            'name' => 'Botol PET Kecil (600ml)',
-            'barcode' => '60012345',
-            'description' => 'Botol plastik PET bening ukuran sedang 600ml',
+        $aqua600 = BottleType::create([
+            'name' => 'Botol PET Aqua 600ml',
+            'barcode' => '8992769100100',
+            'description' => 'Botol air mineral Aqua PET bening ukuran 600ml',
             'points_value' => 10,
         ]);
 
-        $petBesar = BottleType::create([
-            'name' => 'Botol PET Besar (1.5L)',
-            'barcode' => '15012345',
-            'description' => 'Botol plastik PET bening ukuran besar 1.5L',
+        $leMinerale600 = BottleType::create([
+            'name' => 'Botol PET Le Minerale 600ml',
+            'barcode' => '8997002120015',
+            'description' => 'Botol air mineral Le Minerale PET bening 600ml',
+            'points_value' => 10,
+        ]);
+
+        $cocaCola390 = BottleType::create([
+            'name' => 'Botol PET Coca-Cola 390ml',
+            'barcode' => '8998123120018',
+            'description' => 'Botol plastik Coca-Cola 390ml siap minum',
+            'points_value' => 8,
+        ]);
+
+        $sprite390 = BottleType::create([
+            'name' => 'Botol PET Sprite 390ml',
+            'barcode' => '8998123120025',
+            'description' => 'Botol plastik Sprite 390ml siap minum',
+            'points_value' => 8,
+        ]);
+
+        $tehBotol500 = BottleType::create([
+            'name' => 'Botol PET Teh Botol Sosro 500ml',
+            'barcode' => '8991002100123',
+            'description' => 'Botol Teh Botol Sosro PET bening 500ml',
+            'points_value' => 12,
+        ]);
+
+        $aquaGalon15 = BottleType::create([
+            'name' => 'Botol Galon PET Aqua 1.5L',
+            'barcode' => '8992769200200',
+            'description' => 'Botol galon kecil Aqua PET 1.5 liter',
             'points_value' => 25,
         ]);
 
-        $kalengAlu = BottleType::create([
-            'name' => 'Kaleng Aluminium (330ml)',
-            'barcode' => '33012345',
-            'description' => 'Kaleng aluminium bekas minuman bersoda',
-            'points_value' => 40,
+        $club15 = BottleType::create([
+            'name' => 'Botol PET Club 1.5L',
+            'barcode' => '8991111100010',
+            'description' => 'Botol air mineral Club PET bening ukuran 1.5L',
+            'points_value' => 25,
         ]);
 
-        $botolKaca = BottleType::create([
-            'name' => 'Botol Kaca Bening',
-            'barcode' => '99912345',
-            'description' => 'Botol kaca sirup/saus bening',
-            'points_value' => 50,
+        $aleAle500 = BottleType::create([
+            'name' => 'Botol PET Ale-Ale 500ml',
+            'barcode' => '8992222200011',
+            'description' => 'Botol PET Ale-Ale minuman rasa buah 500ml',
+            'points_value' => 12,
         ]);
 
         // 3. Seed Admin User
@@ -172,55 +200,55 @@ class DatabaseSeeder extends Seeder
         // Seed Transactions
         // Ahmad Fauzi transactions
         $createTransaction('ahmad@tuker.in', $employeeBudi, 5, [
-            ['qty' => 5, 'type' => $petKecil],
-            ['qty' => 2, 'type' => $petBesar],
+            ['qty' => 5, 'type' => $aqua600],
+            ['qty' => 2, 'type' => $aquaGalon15],
         ]); // 5*10 + 2*25 = 100 points
         $createTransaction('ahmad@tuker.in', $employeeSiti, 3, [
-            ['qty' => 3, 'type' => $kalengAlu],
-            ['qty' => 2, 'type' => $botolKaca],
-        ]); // 3*40 + 2*50 = 220 points
+            ['qty' => 3, 'type' => $cocaCola390],
+            ['qty' => 2, 'type' => $tehBotol500],
+        ]); // 3*8 + 2*12 = 48 points
         $createTransaction('ahmad@tuker.in', $employeeBudi, 2, [
-            ['qty' => 10, 'type' => $petKecil],
+            ['qty' => 10, 'type' => $aqua600],
         ]); // 10*10 = 100 points
-        // Ahmad's Total Earned: 420 points
+        // Ahmad's Total Earned: 248 points
 
         // Rina Wijaya transactions
         $createTransaction('rina@tuker.in', $employeeSiti, 6, [
-            ['qty' => 4, 'type' => $kalengAlu],
-            ['qty' => 1, 'type' => $botolKaca],
-        ]); // 4*40 + 1*50 = 210 points
+            ['qty' => 4, 'type' => $cocaCola390],
+            ['qty' => 1, 'type' => $tehBotol500],
+        ]); // 4*8 + 1*12 = 44 points
         $createTransaction('rina@tuker.in', $employeeBudi, 4, [
-            ['qty' => 8, 'type' => $petBesar],
+            ['qty' => 8, 'type' => $aquaGalon15],
         ]); // 8*25 = 200 points
-        // Rina's Total Earned: 410 points
+        // Rina's Total Earned: 244 points
 
         // Eko Prasetyo transactions
         $createTransaction('eko@tuker.in', $employeeBudi, 8, [
-            ['qty' => 1, 'type' => $botolKaca],
-            ['qty' => 5, 'type' => $petKecil],
-        ]); // 1*50 + 5*10 = 100 points
-        // Eko's Total Earned: 100 points
+            ['qty' => 1, 'type' => $tehBotol500],
+            ['qty' => 5, 'type' => $aqua600],
+        ]); // 1*12 + 5*10 = 62 points
+        // Eko's Total Earned: 62 points
 
         // Dewi Lestari transactions
         $createTransaction('dewi@tuker.in', $employeeSiti, 10, [
-            ['qty' => 2, 'type' => $botolKaca],
-        ]); // 2*50 = 100 points
+            ['qty' => 2, 'type' => $tehBotol500],
+        ]); // 2*12 = 24 points
         $createTransaction('dewi@tuker.in', $employeeBudi, 9, [
-            ['qty' => 4, 'type' => $kalengAlu],
-        ]); // 4*40 = 160 points
+            ['qty' => 4, 'type' => $cocaCola390],
+        ]); // 4*8 = 32 points
         $createTransaction('dewi@tuker.in', $employeeSiti, 7, [
-            ['qty' => 6, 'type' => $petBesar],
-            ['qty' => 5, 'type' => $petKecil],
+            ['qty' => 6, 'type' => $aquaGalon15],
+            ['qty' => 5, 'type' => $aqua600],
         ]); // 6*25 + 5*10 = 200 points
         $createTransaction('dewi@tuker.in', $employeeBudi, 3, [
-            ['qty' => 8, 'type' => $botolKaca],
-        ]); // 8*50 = 400 points
-        // Dewi's Total Earned: 860 points
+            ['qty' => 8, 'type' => $tehBotol500],
+        ]); // 8*12 = 96 points
+        // Dewi's Total Earned: 352 points
 
         // 7. Seed Redemption Requests
         $pointRate = 200;
 
-        // Ahmad Fauzi: 1 approved (150 pts), 1 pending (200 pts)
+        // Ahmad Fauzi: 1 approved (150 pts), 1 pending (80 pts)
         RedemptionRequest::create([
             'user_id' => $nasabahs['ahmad@tuker.in']['user']->id,
             'points_used' => 150,
@@ -237,8 +265,8 @@ class DatabaseSeeder extends Seeder
 
         RedemptionRequest::create([
             'user_id' => $nasabahs['ahmad@tuker.in']['user']->id,
-            'points_used' => 200,
-            'amount' => 200 * $pointRate,
+            'points_used' => 80,
+            'amount' => 80 * $pointRate,
             'method' => 'cash',
             'bank_name' => 'Cash',
             'recipient_account' => '-',
@@ -247,11 +275,11 @@ class DatabaseSeeder extends Seeder
             'updated_at' => Carbon::now()->subDays(1),
         ]);
 
-        // Rina Wijaya: 1 rejected (300 pts)
+        // Rina Wijaya: 1 rejected (200 pts)
         RedemptionRequest::create([
             'user_id' => $nasabahs['rina@tuker.in']['user']->id,
-            'points_used' => 300,
-            'amount' => 300 * $pointRate,
+            'points_used' => 200,
+            'amount' => 200 * $pointRate,
             'method' => 'ewallet',
             'bank_name' => 'OVO',
             'recipient_account' => '08234567890',
@@ -262,11 +290,11 @@ class DatabaseSeeder extends Seeder
             'updated_at' => Carbon::now()->subDays(2),
         ]);
 
-        // Dewi Lestari: 2 approved (200 pts and 300 pts), 1 pending (100 pts)
+        // Dewi Lestari: 1 approved (150 pts), 1 pending (80 pts)
         RedemptionRequest::create([
             'user_id' => $nasabahs['dewi@tuker.in']['user']->id,
-            'points_used' => 200,
-            'amount' => 200 * $pointRate,
+            'points_used' => 150,
+            'amount' => 150 * $pointRate,
             'method' => 'ewallet',
             'bank_name' => 'DANA',
             'recipient_account' => '08456789012',
@@ -275,26 +303,12 @@ class DatabaseSeeder extends Seeder
             'created_at' => Carbon::now()->subDays(6),
             'updated_at' => Carbon::now()->subDays(5),
         ]);
-        $nasabahs['dewi@tuker.in']['accumulated_points'] -= 200;
+        $nasabahs['dewi@tuker.in']['accumulated_points'] -= 150;
 
         RedemptionRequest::create([
             'user_id' => $nasabahs['dewi@tuker.in']['user']->id,
-            'points_used' => 300,
-            'amount' => 300 * $pointRate,
-            'method' => 'ewallet',
-            'bank_name' => 'LinkAja',
-            'recipient_account' => '08456789012',
-            'status' => 'approved',
-            'processed_at' => Carbon::now()->subDays(1),
-            'created_at' => Carbon::now()->subDays(2),
-            'updated_at' => Carbon::now()->subDays(1),
-        ]);
-        $nasabahs['dewi@tuker.in']['accumulated_points'] -= 300;
-
-        RedemptionRequest::create([
-            'user_id' => $nasabahs['dewi@tuker.in']['user']->id,
-            'points_used' => 100,
-            'amount' => 100 * $pointRate,
+            'points_used' => 80,
+            'amount' => 80 * $pointRate,
             'method' => 'cash',
             'bank_name' => 'Cash',
             'recipient_account' => '-',

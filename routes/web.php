@@ -1,5 +1,6 @@
 <?php
 
+use App\Http\Controllers\AdminBottleTypeController;
 use App\Http\Controllers\AdminController;
 use App\Http\Controllers\AdminEmployeeController;
 use App\Http\Controllers\AuthController;
@@ -63,6 +64,9 @@ Route::middleware(['auth', 'role:admin'])->prefix('admin')->name('admin.')->grou
     
     // CRUD Employees
     Route::resource('employees', AdminEmployeeController::class);
+
+    // CRUD Bottle Types
+    Route::resource('bottle-types', AdminBottleTypeController::class)->except(['show']);
     
     // Directory & Logs
     Route::get('/users', [AdminController::class, 'users'])->name('users');

@@ -125,7 +125,7 @@ class TukerInTest extends TestCase
         // Lookup Bottle Barcode
         $response = $this->actingAs($this->employeeUser)->get('/employee/scan/bottle/11111');
         $response->assertStatus(200);
-        $response->assertJsonPath('bottle.name', 'Botol Kecil');
+        $response->assertJsonPath('bottle.name', 'Botol PET Aqua 600ml');
     }
 
     /**
@@ -142,25 +142,25 @@ class TukerInTest extends TestCase
                 ],
                 [
                     'bottle_type_id' => $this->bottle2->id,
-                    'quantity' => 2, // 2 * 25 = 50 points
+                    'quantity' => 2, // 2 * 8 = 16 points
                 ]
             ]
         ];
 
-        // Total points earned: 80 points. Original user points: 100 points.
+        // Total points earned: 46 points. Original user points: 100 points.
         $response = $this->actingAs($this->employeeUser)->post('/employee/transactions', $payload);
 
         $response->assertRedirect('/employee/dashboard');
 
         $this->assertDatabaseHas('user_profiles', [
             'user_id' => $this->normalUser->id,
-            'points_balance' => 180,
+            'points_balance' => 146,
         ]);
 
         $this->assertDatabaseHas('exchange_transactions', [
             'user_id' => $this->normalUser->id,
             'employee_id' => $this->employeeUser->id,
-            'total_points' => 80,
+            'total_points' => 46,
         ]);
     }
 
