@@ -6,8 +6,10 @@ use App\Http\Requests\StoreEmployeeRequest;
 use App\Http\Requests\UpdateEmployeeRequest;
 use App\Models\Role;
 use App\Models\User;
+use App\Notifications\BusinessActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Notification;
 
 class AdminEmployeeController extends Controller
 {
@@ -44,12 +46,19 @@ class AdminEmployeeController extends Controller
             return back()->with('error', 'Role Pegawai tidak ditemukan.');
         }
 
-        User::create([
+        $employee = User::create([
             'name' => $request->name,
             'email' => $request->email,
             'password' => Hash::make($request->password),
             'role_id' => $employeeRole->id,
         ]);
+
+        Notification::route('slack', config('logging.channels.slack.url'))
+            ->notify(new BusinessActivity(
+                action: 'Pegawai baru',
+                actor: 'Admin',
+                detail: $employee->name . ' (' . $employee->email . ')',
+            ));
 
         return redirect()->route('admin.employees.index')->with('success', 'Akun pegawai baru berhasil dibuat.');
     }
