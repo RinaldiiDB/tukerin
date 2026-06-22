@@ -2,6 +2,7 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\WelcomeMail;
 use App\Models\Role;
 use App\Models\User;
 use App\Models\UserProfile;
@@ -9,6 +10,7 @@ use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
+use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Str;
 
 class AuthController extends Controller
@@ -99,6 +101,8 @@ class AuthController extends Controller
 
             Auth::login($user);
         });
+
+        Mail::to(Auth::user())->queue(new WelcomeMail(Auth::user()));
 
         return redirect()->route('user.dashboard')->with('success', 'Registrasi berhasil! Selamat datang di Tuker.in.');
     }
