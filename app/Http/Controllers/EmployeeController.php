@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\Http\Requests\StoreTransactionRequest;
+use App\Mail\TransactionConfirmation;
 use App\Models\BottleType;
 use App\Models\ExchangeTransaction;
 use App\Models\ExchangeTransactionDetail;
@@ -11,6 +12,7 @@ use App\Models\UserProfile;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
 use Carbon\Carbon;
 
 class EmployeeController extends Controller
@@ -126,7 +128,9 @@ class EmployeeController extends Controller
         }
 
         // Save transactional data using DB transaction
-        DB::transaction(function () use ($userId, $totalPoints, $detailsData) {
+        $transaction = null;
+
+        DB::transaction(function () use ($userId, $totalPoints, $detailsData, &$transaction) {
             $transaction = ExchangeTransaction::create([
                 'user_id' => $userId,
                 'employee_id' => Auth::id(),
@@ -146,6 +150,10 @@ class EmployeeController extends Controller
             // Increment points_balance on user profile
             UserProfile::where('user_id', $userId)->increment('points_balance', $totalPoints);
         });
+
+        $transaction->load(['details.bottleType', 'employee']);
+        $user->load('profile');
+        Mail::to($user)->queue(new TransactionConfirmation($user, $transaction));
 
         return redirect()->route('employee.dashboard')->with('success', 'Transaksi penukaran botol berhasil disimpan! Total poin ditambahkan: ' . $totalPoints . ' poin.');
     }
