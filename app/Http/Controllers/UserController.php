@@ -5,8 +5,10 @@ namespace App\Http\Controllers;
 use App\Http\Requests\StoreRedemptionRequest;
 use App\Models\ExchangeTransaction;
 use App\Models\RedemptionRequest;
+use App\Notifications\BusinessActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Notification;
 
 class UserController extends Controller
 {
@@ -94,6 +96,13 @@ class UserController extends Controller
             'recipient_account' => $request->validated('recipient_account'),
             'status' => 'pending',
         ]);
+
+        Notification::route('slack', config('logging.channels.slack.url'))
+            ->notify(new BusinessActivity(
+                action: 'Pengajuan pencairan',
+                actor: Auth::user()->name . ' (User)',
+                detail: $pointsUsed . ' poin - Rp' . number_format($amount, 0, ',', '.'),
+            ));
 
         return redirect()->route('user.rewards')->with('success', 'Pengajuan pencairan ' . $pointsUsed . ' poin (Rp ' . number_format($amount, 0, ',', '.') . ') berhasil diajukan dan sedang menunggu persetujuan Admin.');
     }
