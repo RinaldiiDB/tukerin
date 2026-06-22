@@ -9,10 +9,12 @@ use App\Models\ExchangeTransaction;
 use App\Models\ExchangeTransactionDetail;
 use App\Models\User;
 use App\Models\UserProfile;
+use App\Notifications\BusinessActivity;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 use Carbon\Carbon;
 
 class EmployeeController extends Controller
@@ -154,6 +156,12 @@ class EmployeeController extends Controller
         $transaction->load(['details.bottleType', 'employee']);
         $user->load('profile');
         Mail::to($user)->queue(new TransactionConfirmation($user, $transaction));
+        Notification::route('slack', config('logging.channels.slack.url'))
+            ->notify(new BusinessActivity(
+                action: 'Penukaran botol',
+                actor: Auth::user()->name . ' (Pegawai)',
+                detail: $user->name . ' - ' . $totalPoints . ' poin',
+            ));
 
         return redirect()->route('employee.dashboard')->with('success', 'Transaksi penukaran botol berhasil disimpan! Total poin ditambahkan: ' . $totalPoints . ' poin.');
     }
