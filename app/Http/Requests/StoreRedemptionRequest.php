@@ -2,6 +2,7 @@
 
 namespace App\Http\Requests;
 
+use App\Models\RedemptionRequest;
 use Illuminate\Foundation\Http\FormRequest;
 
 class StoreRedemptionRequest extends FormRequest
@@ -26,8 +27,22 @@ class StoreRedemptionRequest extends FormRequest
                 'min:1',
                 function ($attribute, $value, $fail) {
                     $profile = auth()->user()->profile;
-                    if (!$profile || $value > $profile->points_balance) {
-                        $fail('Poin tidak mencukupi. Saldo poin Anda saat ini adalah ' . ($profile ? $profile->points_balance : 0) . ' poin.');
+
+                    if (!$profile) {
+                        $fail('Profil nasabah tidak ditemukan.');
+                        return;
+                    }
+
+                    // Hitung total poin yang sedang dalam status pending
+                    $pendingPoints = RedemptionRequest::where('user_id', auth()->id())
+                        ->where('status', 'pending')
+                        ->sum('points_used');
+
+                    // Saldo tersedia = saldo asli - poin yang sedang pending
+                    $availableBalance = $profile->points_balance - $pendingPoints;
+
+                    if ($value > $availableBalance) {
+                        $fail('Poin tidak mencukupi. Saldo tersedia Anda saat ini adalah ' . $availableBalance . ' poin (saldo ' . $profile->points_balance . ' poin dikurangi ' . $pendingPoints . ' poin yang sedang diproses).');
                     }
                 },
             ],
@@ -53,3 +68,4 @@ class StoreRedemptionRequest extends FormRequest
         ];
     }
 }
+
