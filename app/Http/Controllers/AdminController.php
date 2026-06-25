@@ -2,13 +2,17 @@
 
 namespace App\Http\Controllers;
 
+use App\Mail\RedemptionStatus;
 use App\Models\ExchangeTransaction;
 use App\Models\RedemptionRequest;
 use App\Models\User;
 use App\Models\UserProfile;
+use App\Notifications\BusinessActivity;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Mail;
+use Illuminate\Support\Facades\Notification;
 
 class AdminController extends Controller
 {
@@ -107,6 +111,15 @@ class AdminController extends Controller
             ]);
         });
 
+        $request->load('user.profile');
+        Mail::to($request->user)->queue(new RedemptionStatus($request, 'approved'));
+        Notification::route('slack', config('logging.channels.slack.url'))
+            ->notify(new BusinessActivity(
+                action: 'Pencairan disetujui',
+                actor: 'Admin',
+                detail: $request->user->name . ' - Rp' . number_format($request->amount, 0, ',', '.'),
+            ));
+
         return redirect()->route('admin.redemptions')->with('success', 'Permintaan pencairan poin berhasil disetujui! Saldo nasabah telah dipotong.');
     }
 
@@ -138,6 +151,15 @@ class AdminController extends Controller
             'rejection_note' => $request->rejection_note,
             'processed_at' => Carbon::now(),
         ]);
+
+        $redemption->load('user.profile');
+        Mail::to($redemption->user)->queue(new RedemptionStatus($redemption, 'rejected'));
+        Notification::route('slack', config('logging.channels.slack.url'))
+            ->notify(new BusinessActivity(
+                action: 'Pencairan ditolak',
+                actor: 'Admin',
+                detail: $redemption->user->name . ' - ' . $request->rejection_note,
+            ));
 
         return redirect()->route('admin.redemptions')->with('success', 'Permintaan pencairan poin telah ditolak.');
     }
