@@ -25,5 +25,15 @@ dev:
 test:
 	php artisan test
 
+report:
+	rm -f storage/logs/integration-testing.log
+	mkdir -p tests-report
+	php artisan test --log-junit tests-report/junit.xml --testdox-html tests-report/testdox.html
+	@echo ""
+	@echo "Artefak laporan integration testing:"
+	@echo "  - storage/logs/integration-testing.log (jejak langkah per ID)"
+	@echo "  - tests-report/junit.xml (hasil eksekusi)"
+	@echo "  - tests-report/testdox.html (ringkasan per skenario)"
+
 queue:
 	php artisan queue:listen --tries=3
