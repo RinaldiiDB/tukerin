@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Unit;
 
 use App\Models\BottleType;
 use App\Models\ExchangeTransaction;

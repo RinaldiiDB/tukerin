@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature\Support;
+namespace Tests\Feature\Integration\Support;
 
 /**
  * Flag bersama antar test class agar file log integration testing

@@ -1,6 +1,6 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Unit;
 
 use App\Models\ExchangeTransaction;
 use Illuminate\Foundation\Testing\RefreshDatabase;

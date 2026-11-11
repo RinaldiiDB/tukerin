@@ -1,16 +1,15 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Integration;
 
 use App\Models\ExchangeTransaction;
 use App\Models\ExchangeTransactionDetail;
 use Carbon\Carbon;
 use Illuminate\Foundation\Testing\RefreshDatabase;
 use Illuminate\Support\Facades\DB;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
-use Tests\Feature\Support\CreateFixtures;
-use Tests\Feature\Support\LogsIntegrationSteps;
+
+use Tests\Feature\Integration\Support\CreateFixtures;
+use Tests\Feature\Integration\Support\LogsIntegrationSteps;
 use Tests\TestCase;
 
 /**
@@ -24,8 +23,7 @@ class SystemIntegrationTest extends TestCase
     {
         parent::setUp();
         $this->withoutVite();
-        Mail::fake();
-        Notification::fake();
+
         $this->ensureRoles();
     }
 

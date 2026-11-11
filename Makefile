@@ -25,6 +25,18 @@ dev:
 test:
 	php artisan test
 
+unit-test:
+	php artisan test tests/Unit tests/Feature/Unit
+
+integration-test:
+	php artisan test tests/Feature/Integration
+
+browser-test-headless:
+	vendor/bin/pest tests/Feature/Browser
+
+browser-test-headed:
+	vendor/bin/pest tests/Feature/Browser --headed
+
 report:
 	rm -f storage/logs/integration-testing.log
 	mkdir -p tests-report

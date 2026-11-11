@@ -1,12 +1,11 @@
 <?php
 
-namespace Tests\Feature;
+namespace Tests\Feature\Integration;
 
 use Illuminate\Foundation\Testing\RefreshDatabase;
-use Illuminate\Support\Facades\Mail;
-use Illuminate\Support\Facades\Notification;
-use Tests\Feature\Support\CreateFixtures;
-use Tests\Feature\Support\LogsIntegrationSteps;
+
+use Tests\Feature\Integration\Support\CreateFixtures;
+use Tests\Feature\Integration\Support\LogsIntegrationSteps;
 use Tests\TestCase;
 
 /**
@@ -20,8 +19,7 @@ class AuthIntegrationTest extends TestCase
     {
         parent::setUp();
         $this->withoutVite();
-        Mail::fake();
-        Notification::fake();
+
         $this->ensureRoles();
     }
 
