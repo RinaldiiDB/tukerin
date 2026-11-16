@@ -1,178 +1,136 @@
 <!DOCTYPE html>
-<html lang="id" class="h-full bg-slate-50 text-slate-800">
+<html lang="id" class="h-full bg-stone-50 text-slate-800 antialiased">
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>@yield('title', 'Tuker.in') - Daur Ulang Jadi Poin</title>
-    
-    <!-- Fonts -->
-    <link rel="preconnect" href="https://fonts.bunny.net">
-    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700&display=swap" rel="stylesheet" />
+    <meta name="theme-color" content="#f8fafc">
+    <title>@yield('title', 'Tuker.in') · Daur Ulang Jadi Poin</title>
 
-    <!-- Style and Scripts -->
+    <link rel="preconnect" href="https://fonts.bunny.net">
+    <link href="https://fonts.bunny.net/css?family=instrument-sans:400,500,600,700,800&display=swap" rel="stylesheet" />
     @vite(['resources/css/app.css', 'resources/js/app.js'])
-    
-    <style>
-        body {
-            font-family: 'Instrument Sans', sans-serif;
-        }
-    </style>
+    <style>body { font-family: 'Instrument Sans', sans-serif; }</style>
     @yield('styles')
 </head>
-<body class="flex flex-col min-h-full bg-gradient-to-tr from-slate-50 via-slate-100 to-emerald-50/20">
+<body class="app-shell flex min-h-full flex-col">
+    <header class="app-header sticky top-0 z-40">
+        <div class="mx-auto flex h-[4.5rem] max-w-7xl items-center justify-between gap-4 px-4 sm:px-6 lg:px-8">
+            <a href="{{ url('/') }}" class="group flex shrink-0 items-center gap-2.5" aria-label="Tuker.in beranda">
+                <span class="brand-mark flex h-10 w-10 items-center justify-center rounded-2xl text-white transition-transform group-hover:-rotate-6">
+                    <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true">
+                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.2" d="M4 4v5h.582m15.356 2A8.001 8.001 0 114.582 9M4 9h5m11 11v-5h-.582" />
+                    </svg>
+                </span>
+                <span class="brand-name text-lg font-extrabold tracking-tight">Tuker<span>.in</span></span>
+            </a>
 
-    <!-- Header / Navbar -->
-    <nav class="sticky top-0 z-40 bg-white/80 backdrop-blur-md border-b border-slate-200/80">
-        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
-            <div class="flex justify-between h-16">
-                <!-- Logo -->
-                <div class="flex items-center">
-                    <a href="{{ url('/') }}" class="flex items-center gap-2 group">
-                        <div class="w-9 h-9 rounded-xl bg-gradient-to-tr from-emerald-500 to-teal-400 flex items-center justify-center shadow-lg shadow-emerald-500/20 group-hover:scale-105 transition-all duration-300">
-                            <svg class="w-5 h-5 text-white" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M4 4v5h.582m15.356 2A8.001 8.001 0 1121.21 8H17m-.5 8.5V17H12"></path>
-                            </svg>
+            @auth
+                <nav class="desktop-navigation hidden items-center gap-1 lg:flex" aria-label="Navigasi utama">
+                    @if(auth()->user()->isUser())
+                        <a href="{{ route('user.dashboard') }}" class="rounded-xl px-3 py-2 text-sm font-semibold transition {{ request()->routeIs('user.dashboard') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Beranda</a>
+                        <a href="{{ route('user.transactions') }}" class="rounded-xl px-3 py-2 text-sm font-semibold transition {{ request()->routeIs('user.transactions') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Transaksi</a>
+                        <a href="{{ route('user.rewards') }}" class="rounded-xl px-3 py-2 text-sm font-semibold transition {{ request()->routeIs('user.rewards*') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Pencairan</a>
+                        <a href="{{ route('user.qr') }}" class="rounded-xl px-3 py-2 text-sm font-semibold transition {{ request()->routeIs('user.qr') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">QR Saya</a>
+                    @elseif(auth()->user()->isEmployee())
+                        <a href="{{ route('employee.dashboard') }}" class="rounded-xl px-3 py-2 text-sm font-semibold transition {{ request()->routeIs('employee.dashboard') ? 'bg-amber-50 text-amber-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Beranda</a>
+                        <a href="{{ route('employee.scan') }}" class="rounded-xl px-3 py-2 text-sm font-semibold transition {{ request()->routeIs('employee.scan') ? 'bg-amber-50 text-amber-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Scan Botol</a>
+                        <a href="{{ route('employee.transactions') }}" class="rounded-xl px-3 py-2 text-sm font-semibold transition {{ request()->routeIs('employee.transactions') ? 'bg-amber-50 text-amber-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Riwayat</a>
+                    @elseif(auth()->user()->isAdmin())
+                        <a href="{{ route('admin.dashboard') }}" class="rounded-xl px-3 py-2 text-sm font-semibold transition {{ request()->routeIs('admin.dashboard') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Ringkasan</a>
+                        <a href="{{ route('admin.employees.index') }}" class="rounded-xl px-3 py-2 text-sm font-semibold transition {{ request()->routeIs('admin.employees*') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Pegawai</a>
+                        <a href="{{ route('admin.users') }}" class="rounded-xl px-3 py-2 text-sm font-semibold transition {{ request()->routeIs('admin.users') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Nasabah</a>
+                        <a href="{{ route('admin.transactions') }}" class="rounded-xl px-3 py-2 text-sm font-semibold transition {{ request()->routeIs('admin.transactions') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Transaksi</a>
+                        <a href="{{ route('admin.redemptions') }}" class="rounded-xl px-3 py-2 text-sm font-semibold transition {{ request()->routeIs('admin.redemptions*') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Pencairan</a>
+                        <a href="{{ route('admin.bottle-types.index') }}" class="rounded-xl px-3 py-2 text-sm font-semibold transition {{ request()->routeIs('admin.bottle-types*') ? 'bg-emerald-50 text-emerald-700' : 'text-slate-500 hover:bg-slate-50 hover:text-slate-900' }}">Jenis Botol</a>
+                    @endif
+                </nav>
+
+                <div class="flex shrink-0 items-center gap-3">
+                    <div class="hidden items-center gap-2.5 md:flex">
+                        <span class="flex h-9 w-9 items-center justify-center rounded-full bg-slate-900 text-xs font-bold text-white ring-4 ring-slate-100">{{ collect(explode(' ', auth()->user()->name))->map(fn ($part) => substr($part, 0, 1))->take(2)->implode('') }}</span>
+                        <div class="hidden xl:block">
+                            <p class="max-w-36 truncate text-xs font-bold text-slate-800">{{ auth()->user()->name }}</p>
+                            <p class="text-[10px] font-semibold uppercase tracking-wider text-slate-400">{{ auth()->user()->role->label }}</p>
                         </div>
-                        <span class="text-xl font-bold bg-gradient-to-r from-emerald-600 to-teal-600 bg-clip-text text-transparent tracking-tight">Tuker.in</span>
-                    </a>
+                    </div>
+                    <form method="POST" action="{{ route('logout') }}">
+                        @csrf
+                        <button type="submit" class="flex h-10 items-center gap-2 rounded-xl border border-slate-200 px-3 text-xs font-bold text-slate-600 transition hover:border-rose-200 hover:bg-rose-50 hover:text-rose-600" aria-label="Keluar dari akun">
+                            <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1" /></svg>
+                            <span class="hidden sm:inline">Keluar</span>
+                        </button>
+                    </form>
                 </div>
-
-                <!-- Right Nav -->
-                <div class="flex items-center gap-3">
-                    @auth
-                        <div class="hidden md:flex items-center gap-3 mr-2">
-                            <span class="text-xs font-semibold px-2.5 py-1 rounded-full 
-                                {{ auth()->user()->isAdmin() ? 'bg-rose-50 text-rose-600 border border-rose-100' : '' }}
-                                {{ auth()->user()->isEmployee() ? 'bg-amber-50 text-amber-600 border border-amber-100' : '' }}
-                                {{ auth()->user()->isUser() ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : '' }}">
-                                {{ auth()->user()->role->label }}
-                            </span>
-                            <span class="text-sm font-medium text-slate-600">Hai, <strong class="text-slate-800">{{ auth()->user()->name }}</strong></span>
-                        </div>
-
-                        <!-- Logout Button -->
-                        <form method="POST" action="{{ route('logout') }}" class="inline">
-                            @csrf
-                            <button type="submit" class="flex items-center gap-1.5 px-3.5 py-1.5 text-xs font-semibold text-slate-500 hover:text-rose-600 hover:bg-rose-50 rounded-lg transition-all duration-200">
-                                <svg class="w-4 h-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M17 16l4-4m0 0l-4-4m4 4H7m6 4v1a3 3 0 01-3 3H6a3 3 0 01-3-3V7a3 3 0 013-3h4a3 3 0 013 3v1"></path>
-                                </svg>
-                                <span>Keluar</span>
-                            </button>
-                        </form>
-                    @else
-                        <a href="{{ route('login') }}" class="text-sm font-semibold text-slate-600 hover:text-emerald-600 transition-colors">Masuk</a>
-                        <a href="{{ route('register') }}" class="px-4 py-2 text-sm font-semibold text-white bg-emerald-600 hover:bg-emerald-500 rounded-xl transition-all duration-200 shadow-md shadow-emerald-500/10">Daftar</a>
-                    @endauth
+            @else
+                <div class="flex items-center gap-2">
+                    <a href="{{ route('login') }}" class="rounded-xl px-3.5 py-2 text-sm font-bold text-slate-600 transition hover:bg-slate-100 hover:text-slate-900">Masuk</a>
+                    <a href="{{ route('register') }}" class="rounded-xl bg-emerald-600 px-4 py-2.5 text-sm font-bold text-white shadow-md shadow-emerald-900/10 transition hover:bg-emerald-700">Daftar</a>
                 </div>
-            </div>
+            @endauth
         </div>
-    </nav>
+    </header>
 
-    <!-- Main Content Grid -->
-    <main class="flex-1 max-w-7xl w-full mx-auto px-4 sm:px-6 lg:px-8 py-6 pb-24 md:pb-12">
-        <!-- Flash Alerts -->
+    <main class="app-main mx-auto w-full max-w-7xl flex-1 px-4 py-6 sm:px-6 sm:py-8 lg:px-8 lg:py-10 {{ auth()->check() ? 'pb-24 lg:pb-10' : '' }}">
         @if (session('success'))
-            <div class="mb-5 flex items-center gap-3 p-4 rounded-2xl bg-emerald-50 border border-emerald-100 text-emerald-800 shadow-sm animate-fade-in">
-                <svg class="w-5.5 h-5.5 text-emerald-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                </svg>
-                <div class="text-sm font-medium">{{ session('success') }}</div>
+            <div role="status" class="mb-6 flex items-start gap-3 rounded-2xl border border-emerald-200 bg-emerald-50 px-4 py-3.5 text-emerald-900 shadow-sm">
+                <svg class="mt-0.5 h-5 w-5 shrink-0 text-emerald-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 12l2 2 4-4m6 2a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                <p class="text-sm font-semibold">{{ session('success') }}</p>
             </div>
         @endif
-
         @if (session('error'))
-            <div class="mb-5 flex items-center gap-3 p-4 rounded-2xl bg-rose-50 border border-rose-100 text-rose-800 shadow-sm animate-fade-in">
-                <svg class="w-5.5 h-5.5 text-rose-500 shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                    <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2.5" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z"></path>
-                </svg>
-                <div class="text-sm font-medium">{{ session('error') }}</div>
+            <div role="alert" class="mb-6 flex items-start gap-3 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3.5 text-rose-900 shadow-sm">
+                <svg class="mt-0.5 h-5 w-5 shrink-0 text-rose-600" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 9v2m0 4h.01m-6.938 4h13.856c1.54 0 2.502-1.667 1.732-3L13.732 4c-.77-1.333-2.694-1.333-3.464 0L3.34 16c-.77 1.333.192 3 1.732 3z" /></svg>
+                <p class="text-sm font-semibold">{{ session('error') }}</p>
+            </div>
+        @endif
+        @if ($errors->any())
+            <div role="alert" class="mb-6 rounded-2xl border border-rose-200 bg-rose-50 px-4 py-3.5 text-rose-900 shadow-sm">
+                <p class="text-sm font-bold">Periksa kembali data yang dimasukkan.</p>
+                <ul class="mt-1 list-inside list-disc text-xs font-medium">
+                    @foreach ($errors->all() as $error)
+                        <li>{{ $error }}</li>
+                    @endforeach
+                </ul>
             </div>
         @endif
 
         @yield('content')
     </main>
 
-    <!-- Bottom Nav for Mobile Screens (Mobile-first Layout shortcuts) -->
     @auth
-        <div class="fixed bottom-0 left-0 right-0 z-40 bg-white/90 backdrop-blur-md border-t border-slate-200/80 md:hidden flex justify-around items-center h-16 px-2 shadow-[0_-4px_20px_rgba(0,0,0,0.04)]">
-            @if(auth()->user()->isUser())
-                <a href="{{ route('user.dashboard') }}" class="flex flex-col items-center justify-center w-16 h-full {{ request()->routeIs('user.dashboard') ? 'text-emerald-600' : 'text-slate-400 hover:text-slate-600' }}">
-                    <svg class="w-5.5 h-5.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                    </svg>
-                    <span class="text-[10px] font-medium mt-1">Beranda</span>
-                </a>
-                <a href="{{ route('user.qr') }}" class="flex flex-col items-center justify-center w-16 h-full {{ request()->routeIs('user.qr') ? 'text-emerald-600' : 'text-slate-400 hover:text-slate-600' }}">
-                    <svg class="w-5.5 h-5.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <span class="text-[10px] font-medium mt-1">QR Code</span>
-                </a>
-                <a href="{{ route('user.transactions') }}" class="flex flex-col items-center justify-center w-16 h-full {{ request()->routeIs('user.transactions') ? 'text-emerald-600' : 'text-slate-400 hover:text-slate-600' }}">
-                    <svg class="w-5.5 h-5.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-                    </svg>
-                    <span class="text-[10px] font-medium mt-1">Transaksi</span>
-                </a>
-                <a href="{{ route('user.rewards') }}" class="flex flex-col items-center justify-center w-16 h-full {{ request()->routeIs('user.rewards*') ? 'text-emerald-600' : 'text-slate-400 hover:text-slate-600' }}">
-                    <svg class="w-5.5 h-5.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <span class="text-[10px] font-medium mt-1">Cairkan</span>
-                </a>
-            @endif
-
-            @if(auth()->user()->isEmployee())
-                <a href="{{ route('employee.dashboard') }}" class="flex flex-col items-center justify-center w-20 h-full {{ request()->routeIs('employee.dashboard') ? 'text-emerald-600' : 'text-slate-400 hover:text-slate-600' }}">
-                    <svg class="w-5.5 h-5.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 12l2-2m0 0l7-7 7 7M5 10v10a1 1 0 001 1h3m10-11l2 2m-2-2v10a1 1 0 01-1 1h-3m-6 0a1 1 0 001-1v-4a1 1 0 011-1h2a1 1 0 011 1v4a1 1 0 001 1m-6 0h6"></path>
-                    </svg>
-                    <span class="text-[10px] font-medium mt-1">Beranda</span>
-                </a>
-                <a href="{{ route('employee.scan') }}" class="flex flex-col items-center justify-center w-20 h-full {{ request()->routeIs('employee.scan') ? 'text-emerald-600' : 'text-slate-400 hover:text-slate-600' }}">
-                    <div class="relative -top-3 w-12 h-12 rounded-full bg-gradient-to-tr from-emerald-600 to-teal-500 flex items-center justify-center text-white shadow-md shadow-emerald-600/30 ring-4 ring-white">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <span class="text-[10px] font-medium -mt-2">Scan</span>
-                </a>
-                <a href="{{ route('employee.transactions') }}" class="flex flex-col items-center justify-center w-20 h-full {{ request()->routeIs('employee.transactions') ? 'text-emerald-600' : 'text-slate-400 hover:text-slate-600' }}">
-                    <svg class="w-5.5 h-5.5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-                    </svg>
-                    <span class="text-[10px] font-medium mt-1">Riwayat</span>
-                </a>
-            @endif
-
-            @if(auth()->user()->isAdmin())
-                <a href="{{ route('admin.dashboard') }}" class="flex flex-col items-center justify-center w-16 h-full {{ request()->routeIs('admin.dashboard') ? 'text-emerald-600' : 'text-slate-400 hover:text-slate-600' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2V6zM14 6a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2V6zM4 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2H6a2 2 0 01-2-2v-2zM14 16a2 2 0 012-2h2a2 2 0 012 2v2a2 2 0 01-2 2h-2a2 2 0 01-2-2v-2z"></path>
-                    </svg>
-                    <span class="text-[9px] font-medium mt-1">Dasbor</span>
-                </a>
-                <a href="{{ route('admin.employees.index') }}" class="flex flex-col items-center justify-center w-16 h-full {{ request()->routeIs('admin.employees*') ? 'text-emerald-600' : 'text-slate-400 hover:text-slate-600' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4.354a4 4 0 110 5.292M15 21H3v-1a6 6 0 0112 0v1zm0 0h6v-1a6 6 0 00-9-5.197M13 7a4 4 0 11-8 0 4 4 0 018 0z"></path>
-                    </svg>
-                    <span class="text-[9px] font-medium mt-1">Pegawai</span>
-                </a>
-                <a href="{{ route('admin.users') }}" class="flex flex-col items-center justify-center w-16 h-full {{ request()->routeIs('admin.users') ? 'text-emerald-600' : 'text-slate-400 hover:text-slate-600' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a3 3 0 00-5.356-1.857M17 20H7m10 0v-2c0-.656-.126-1.283-.356-1.857M7 20H2v-2a3 3 0 015.356-1.857M7 20v-2c0-.656.126-1.283.356-1.857m0 0a5.002 5.002 0 019.288 0M15 7a3 3 0 11-6 0 3 3 0 016 0zm6 3a2 2 0 11-4 0 2 2 0 014 0zM7 10a2 2 0 11-4 0 2 2 0 014 0z"></path>
-                    </svg>
-                    <span class="text-[9px] font-medium mt-1">Nasabah</span>
-                </a>
-                <a href="{{ route('admin.redemptions') }}" class="flex flex-col items-center justify-center w-16 h-full {{ request()->routeIs('admin.redemptions*') ? 'text-emerald-600' : 'text-slate-400 hover:text-slate-600' }}">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <span class="text-[9px] font-medium mt-1">Pencairan</span>
-                </a>
-            @endif
-        </div>
+        <nav class="mobile-navigation fixed inset-x-0 bottom-0 z-40 px-1 pb-[max(env(safe-area-inset-bottom),0.25rem)] lg:hidden" aria-label="Navigasi mobile">
+            <div class="mx-auto flex h-[4.25rem] max-w-lg items-center justify-around">
+                @if(auth()->user()->isUser())
+                    <a href="{{ route('user.dashboard') }}" class="flex h-full min-w-0 flex-1 flex-col items-center justify-center gap-1 {{ request()->routeIs('user.dashboard') ? 'text-emerald-700' : 'text-slate-400' }}">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10.5L12 3l9 7.5M5 9v11h14V9m-9 11v-6h4v6" /></svg><span class="text-[10px] font-bold">Beranda</span>
+                    </a>
+                    <a href="{{ route('user.qr') }}" class="flex h-full min-w-0 flex-1 flex-col items-center justify-center gap-1 {{ request()->routeIs('user.qr') ? 'text-emerald-700' : 'text-slate-400' }}">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h5v5H4zM15 4h5v5h-5zM4 15h5v5H4zM15 15h2v2h-2zm3 0h2v5h-2zm-3 3h2v2h-2zM11 4v2m0 2v2m-2 1h2m2 0h2m-2 2v2" /></svg><span class="text-[10px] font-bold">QR Saya</span>
+                    </a>
+                    <a href="{{ route('user.transactions') }}" class="flex h-full min-w-0 flex-1 flex-col items-center justify-center gap-1 {{ request()->routeIs('user.transactions') ? 'text-emerald-700' : 'text-slate-400' }}">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" /></svg><span class="text-[10px] font-bold">Transaksi</span>
+                    </a>
+                    <a href="{{ route('user.rewards') }}" class="flex h-full min-w-0 flex-1 flex-col items-center justify-center gap-1 {{ request()->routeIs('user.rewards*') ? 'text-emerald-700' : 'text-slate-400' }}">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><span class="text-[10px] font-bold">Pencairan</span>
+                    </a>
+                @elseif(auth()->user()->isEmployee())
+                    <a href="{{ route('employee.dashboard') }}" class="flex h-full min-w-0 flex-1 flex-col items-center justify-center gap-1 {{ request()->routeIs('employee.dashboard') ? 'text-amber-700' : 'text-slate-400' }}">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M3 10.5L12 3l9 7.5M5 9v11h14V9m-9 11v-6h4v6" /></svg><span class="text-[10px] font-bold">Beranda</span>
+                    </a>
+                    <a href="{{ route('employee.scan') }}" class="flex h-full min-w-0 flex-1 flex-col items-center justify-center gap-1 {{ request()->routeIs('employee.scan') ? 'text-amber-700' : 'text-slate-400' }}">
+                        <span class="flex h-9 w-9 items-center justify-center rounded-2xl bg-amber-500 text-white shadow-md shadow-amber-500/25"><svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h5v5H4zM15 4h5v5h-5zM4 15h5v5H4zM15 15h2v2h-2zm3 0h2v5h-2zm-3 3h2v2h-2z" /></svg></span><span class="text-[10px] font-bold">Scan</span>
+                    </a>
+                    <a href="{{ route('employee.transactions') }}" class="flex h-full min-w-0 flex-1 flex-col items-center justify-center gap-1 {{ request()->routeIs('employee.transactions') ? 'text-amber-700' : 'text-slate-400' }}">
+                        <svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M8 6h13M8 12h13M8 18h13M3 6h.01M3 12h.01M3 18h.01" /></svg><span class="text-[10px] font-bold">Riwayat</span>
+                    </a>
+                @elseif(auth()->user()->isAdmin())
+                    <a href="{{ route('admin.dashboard') }}" class="flex h-full min-w-0 flex-1 flex-col items-center justify-center gap-1 {{ request()->routeIs('admin.dashboard') ? 'text-emerald-700' : 'text-slate-400' }}"><svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h6v6H4zM14 4h6v6h-6zM4 14h6v6H4zM14 14h6v6h-6z" /></svg><span class="text-[10px] font-bold">Ringkasan</span></a>
+                    <a href="{{ route('admin.employees.index') }}" class="flex h-full min-w-0 flex-1 flex-col items-center justify-center gap-1 {{ request()->routeIs('admin.employees*') ? 'text-emerald-700' : 'text-slate-400' }}"><svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M16 21v-2a4 4 0 00-4-4H8a4 4 0 00-4 4v2m12-13a4 4 0 11-8 0 4 4 0 018 0zm2 2a4 4 0 014 4v2" /></svg><span class="text-[10px] font-bold">Pegawai</span></a>
+                    <a href="{{ route('admin.users') }}" class="flex h-full min-w-0 flex-1 flex-col items-center justify-center gap-1 {{ request()->routeIs('admin.users') ? 'text-emerald-700' : 'text-slate-400' }}"><svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M17 20h5v-2a4 4 0 00-6-3.46M9 20H2v-2a4 4 0 017.5-2M15 7a4 4 0 11-8 0 4 4 0 018 0zm6 3a2 2 0 11-4 0 2 2 0 014 0z" /></svg><span class="text-[10px] font-bold">Nasabah</span></a>
+                    <a href="{{ route('admin.redemptions') }}" class="flex h-full min-w-0 flex-1 flex-col items-center justify-center gap-1 {{ request()->routeIs('admin.redemptions*') ? 'text-emerald-700' : 'text-slate-400' }}"><svg class="h-5 w-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg><span class="text-[10px] font-bold">Pencairan</span></a>
+                @endif
+            </div>
+        </nav>
     @endauth
 
     @yield('scripts')

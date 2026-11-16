@@ -3,114 +3,98 @@
 @section('title', 'Dasbor Nasabah')
 
 @section('content')
-<div class="space-y-6">
-    <!-- Welcome Header / Balance Card -->
-    <div class="relative overflow-hidden bg-gradient-to-tr from-slate-900 via-slate-800 to-emerald-950 text-white rounded-3xl p-6 md:p-8 shadow-xl">
-        <!-- Decorative subtle lights -->
-        <div class="absolute right-0 bottom-0 w-64 h-64 bg-emerald-500/10 rounded-full blur-3xl -mr-16 -mb-16"></div>
-        <div class="absolute left-1/3 top-0 w-32 h-32 bg-teal-500/10 rounded-full blur-2xl"></div>
+<div class="space-y-7">
+    <div class="dashboard-heading">
+        <div>
+            <p class="eyebrow">Ruang hijau Anda</p>
+            <h1>Halo, {{ auth()->user()->name }} <span aria-hidden="true">✦</span></h1>
+            <p class="mt-1">Setiap botol yang kamu tukarkan membawa dampak baik.</p>
+        </div>
+        <span class="hidden rounded-full border border-emerald-900/10 bg-white/70 px-4 py-2 text-xs font-bold text-emerald-900 sm:inline-flex">Perjalanan berkelanjutan dimulai dari sini</span>
+    </div>
 
-        <div class="relative z-10 flex flex-col md:flex-row md:items-center justify-between gap-6">
+    <section class="hero-card p-6 md:p-9" aria-label="Saldo poin">
+        <div class="relative z-10 flex flex-col justify-between gap-7 md:flex-row md:items-end">
             <div>
-                <p class="text-emerald-400 font-semibold text-xs tracking-wider uppercase">Saldo Aktif Anda</p>
-                <h1 class="text-4xl md:text-5xl font-extrabold tracking-tight mt-1">
-                    {{ number_format($profile->points_balance, 0, ',', '.') }} <span class="text-lg md:text-xl font-medium text-slate-300">Poin</span>
-                </h1>
-                <p class="text-xs text-slate-400 mt-2 font-medium">
-                    Estimasi Nilai Pencairan: <strong class="text-emerald-400">Rp {{ number_format($profile->points_balance * 200, 0, ',', '.') }}</strong>
-                </p>
+                <p class="hero-kicker text-xs font-extrabold uppercase tracking-[.18em]">Saldo poin tersedia</p>
+                <p class="hero-value mt-2 text-5xl font-extrabold md:text-6xl">{{ number_format($profile->points_balance, 0, ',', '.') }} <span class="text-xl font-semibold tracking-normal text-white/60">poin</span></p>
+                <p class="hero-meta mt-3 text-sm">Setara dengan <strong class="font-bold text-lime-200">Rp {{ number_format($profile->points_balance * 200, 0, ',', '.') }}</strong> untuk dicairkan.</p>
             </div>
-            
-            <div class="flex gap-3">
-                <a href="{{ route('user.qr') }}" class="flex-1 md:flex-initial flex items-center justify-center gap-2 px-5 py-3.5 bg-emerald-600 hover:bg-emerald-500 text-white font-bold text-sm rounded-2xl transition-all duration-200 shadow-lg shadow-emerald-600/20">
-                    <svg class="w-5 h-5" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 4v1m6 11h2m-6 0h-2v4m0-11v3m0 0h.01M12 12h.01M16 12h.01M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <span>Tampilkan QR</span>
+            <div class="flex flex-col gap-2 sm:flex-row">
+                <a href="{{ route('user.qr') }}" class="hero-action">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M4 4h5v5H4zM15 4h5v5h-5zM4 15h5v5H4zM15 15h2v2h-2zm3 0h2v5h-2zm-3 3h2v2h-2z" /></svg>
+                    Tampilkan QR
                 </a>
-                <a href="{{ route('user.rewards.create') }}" class="flex-1 md:flex-initial flex items-center justify-center gap-2 px-5 py-3.5 bg-slate-800 hover:bg-slate-700 text-white font-bold text-sm border border-slate-700 rounded-2xl transition-all duration-200">
-                    <svg class="w-5 h-5 text-emerald-400" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                        <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                    </svg>
-                    <span>Cairkan Poin</span>
+                <a href="{{ route('user.rewards.create') }}" class="hero-action secondary">
+                    <svg class="h-4 w-4" fill="none" stroke="currentColor" viewBox="0 0 24 24" aria-hidden="true"><path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z" /></svg>
+                    Cairkan poin
                 </a>
             </div>
         </div>
-    </div>
+        <div class="relative z-10 mt-7 flex items-center gap-2 border-t border-white/15 pt-4 text-xs font-medium text-white/65">
+            <span class="flex h-6 w-6 items-center justify-center rounded-full bg-lime-300/15 text-lime-200">↗</span>
+            <span>Saldo bertambah setiap kali kamu menyetorkan botol di titik Tuker.in.</span>
+        </div>
+    </section>
 
-    <!-- Quick info cards -->
-    <div class="grid grid-cols-1 md:grid-cols-2 gap-6">
-        <!-- Recent Exchange Transactions -->
-        <div class="bg-white border border-slate-200/60 rounded-3xl p-6 shadow-sm">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-bold text-slate-800">Penukaran Terakhir</h2>
-                <a href="{{ route('user.transactions') }}" class="text-xs font-bold text-emerald-600 hover:text-emerald-500 transition-colors">Lihat Semua</a>
+    <div class="grid gap-5 lg:grid-cols-2">
+        <section class="bg-white border border-slate-200/60 rounded-3xl p-6 shadow-sm">
+            <div class="mb-5 flex items-center justify-between gap-3">
+                <div>
+                    <p class="text-[10px] font-extrabold uppercase tracking-[.16em] text-slate-400">Aktivitas terbaru</p>
+                    <h2 class="mt-1 text-lg font-extrabold text-slate-800">Penukaran botol</h2>
+                </div>
+                <a href="{{ route('user.transactions') }}" class="rounded-full bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700 hover:bg-emerald-100">Semua transaksi <span aria-hidden="true">↗</span></a>
             </div>
-
             @if($recentTransactions->isEmpty())
-                <div class="py-8 text-center">
-                    <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 mx-auto mb-2">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M9 5H7a2 2 0 00-2 2v12a2 2 0 002 2h10a2 2 0 002-2V7a2 2 0 00-2-2h-2M9 5a2 2 0 002 2h2a2 2 0 002-2M9 5a2 2 0 012-2h2a2 2 0 012 2m-3 7h3m-3 4h3m-6-4h.01M9 16h.01"></path>
-                        </svg>
-                    </div>
-                    <p class="text-xs text-slate-400 font-medium">Belum ada transaksi penukaran.</p>
+                <div class="rounded-2xl border border-dashed border-slate-200 bg-slate-50/70 px-5 py-9 text-center">
+                    <span class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-2xl shadow-sm" aria-hidden="true">♻</span>
+                    <p class="text-sm font-bold text-slate-700">Belum ada penukaran</p>
+                    <p class="mt-1 text-xs text-slate-500">Riwayat setoran botolmu akan muncul di sini.</p>
                 </div>
             @else
                 <div class="divide-y divide-slate-100">
                     @foreach($recentTransactions as $tx)
-                        <div class="py-3 flex items-center justify-between gap-4 first:pt-0 last:pb-0">
-                            <div>
-                                <p class="text-sm font-semibold text-slate-800">Penukaran Botol Plastik</p>
-                                <p class="text-[11px] text-slate-400 font-medium mt-0.5">{{ $tx->transacted_at->format('d M Y - H:i') }}</p>
+                        <div class="flex items-center justify-between gap-4 py-4 first:pt-0 last:pb-0">
+                            <div class="flex min-w-0 items-center gap-3">
+                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-emerald-50 text-emerald-700" aria-hidden="true">♻</span>
+                                <div class="min-w-0"><p class="truncate text-sm font-bold text-slate-800">Penukaran botol plastik</p><p class="mt-1 text-xs text-slate-400">{{ $tx->transacted_at->format('d M Y · H:i') }}</p></div>
                             </div>
-                            <div class="text-right">
-                                <span class="text-sm font-bold text-emerald-600">+{{ $tx->total_points }} Poin</span>
-                            </div>
+                            <span class="shrink-0 rounded-full bg-emerald-50 px-3 py-1.5 text-xs font-extrabold text-emerald-700">+{{ number_format($tx->total_points, 0, ',', '.') }}</span>
                         </div>
                     @endforeach
                 </div>
             @endif
-        </div>
+        </section>
 
-        <!-- Recent Redemption Requests -->
-        <div class="bg-white border border-slate-200/60 rounded-3xl p-6 shadow-sm">
-            <div class="flex items-center justify-between mb-4">
-                <h2 class="text-lg font-bold text-slate-800">Pencairan Terakhir</h2>
-                <a href="{{ route('user.rewards') }}" class="text-xs font-bold text-emerald-600 hover:text-emerald-500 transition-colors">Lihat Semua</a>
+        <section class="bg-white border border-slate-200/60 rounded-3xl p-6 shadow-sm">
+            <div class="mb-5 flex items-center justify-between gap-3">
+                <div>
+                    <p class="text-[10px] font-extrabold uppercase tracking-[.16em] text-slate-400">Status permintaan</p>
+                    <h2 class="mt-1 text-lg font-extrabold text-slate-800">Pencairan poin</h2>
+                </div>
+                <a href="{{ route('user.rewards') }}" class="rounded-full bg-emerald-50 px-3 py-2 text-xs font-bold text-emerald-700 hover:bg-emerald-100">Riwayat <span aria-hidden="true">↗</span></a>
             </div>
-
             @if($recentRedemptions->isEmpty())
-                <div class="py-8 text-center">
-                    <div class="w-12 h-12 rounded-full bg-slate-50 flex items-center justify-center text-slate-400 mx-auto mb-2">
-                        <svg class="w-6 h-6" fill="none" stroke="currentColor" viewBox="0 0 24 24" xmlns="http://www.w3.org/2000/svg">
-                            <path stroke-linecap="round" stroke-linejoin="round" stroke-width="2" d="M12 8c-1.657 0-3 .895-3 2s1.343 2 3 2 3 .895 3 2-1.343 2-3 2m0-8c1.11 0 2.08.402 2.599 1M12 8V7m0 1v8m0 0v1m0-1c-1.11 0-2.08-.402-2.599-1M21 12a9 9 0 11-18 0 9 9 0 0118 0z"></path>
-                        </svg>
-                    </div>
-                    <p class="text-xs text-slate-400 font-medium">Belum ada pengajuan pencairan.</p>
+                <div class="rounded-2xl border border-dashed border-slate-200 bg-slate-50/70 px-5 py-9 text-center">
+                    <span class="mx-auto mb-3 flex h-12 w-12 items-center justify-center rounded-2xl bg-white text-2xl shadow-sm" aria-hidden="true">✳</span>
+                    <p class="text-sm font-bold text-slate-700">Belum ada pencairan</p>
+                    <p class="mt-1 text-xs text-slate-500">Ajukan pencairan poin kapan saja dari saldo Anda.</p>
                 </div>
             @else
                 <div class="divide-y divide-slate-100">
                     @foreach($recentRedemptions as $rr)
-                        <div class="py-3 flex items-center justify-between gap-4 first:pt-0 last:pb-0">
-                            <div>
-                                <p class="text-sm font-semibold text-slate-800">Cairkan ke {{ $rr->bank_name }}</p>
-                                <p class="text-[11px] text-slate-400 font-medium mt-0.5">{{ $rr->created_at->format('d M Y - H:i') }}</p>
+                        <div class="flex items-center justify-between gap-4 py-4 first:pt-0 last:pb-0">
+                            <div class="flex min-w-0 items-center gap-3">
+                                <span class="flex h-10 w-10 shrink-0 items-center justify-center rounded-xl bg-amber-50 text-amber-700" aria-hidden="true">↗</span>
+                                <div class="min-w-0"><p class="truncate text-sm font-bold text-slate-800">{{ $rr->bank_name }}</p><p class="mt-1 text-xs text-slate-400">{{ $rr->created_at->format('d M Y · H:i') }}</p></div>
                             </div>
-                            <div class="text-right">
-                                <p class="text-sm font-bold text-slate-800">Rp {{ number_format($rr->amount, 0, ',', '.') }}</p>
-                                <span class="inline-block px-2 py-0.5 text-[10px] font-bold rounded-md mt-1
-                                    {{ $rr->status === 'pending' ? 'bg-amber-50 text-amber-600 border border-amber-100' : '' }}
-                                    {{ $rr->status === 'approved' ? 'bg-emerald-50 text-emerald-600 border border-emerald-100' : '' }}
-                                    {{ $rr->status === 'rejected' ? 'bg-rose-50 text-rose-600 border border-rose-100' : '' }}">
-                                    {{ ucfirst($rr->status) }}
-                                </span>
-                            </div>
+                            <div class="shrink-0 text-right"><p class="text-sm font-extrabold text-slate-800">Rp {{ number_format($rr->amount, 0, ',', '.') }}</p><span class="mt-1 inline-flex rounded-full px-2.5 py-1 text-[10px] font-bold {{ $rr->status === 'pending' ? 'bg-amber-50 text-amber-700' : '' }} {{ $rr->status === 'approved' ? 'bg-emerald-50 text-emerald-700' : '' }} {{ $rr->status === 'rejected' ? 'bg-rose-50 text-rose-700' : '' }}">{{ ucfirst($rr->status) }}</span></div>
                         </div>
                     @endforeach
                 </div>
             @endif
-        </div>
+        </section>
     </div>
 </div>
 @endsection

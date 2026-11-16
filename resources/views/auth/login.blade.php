@@ -3,70 +3,34 @@
 @section('title', 'Masuk')
 
 @section('content')
-<div class="flex flex-col justify-center py-12 sm:px-6 lg:px-8 max-w-md mx-auto">
-    <div class="sm:mx-auto sm:w-full sm:max-w-md text-center">
-        <h2 class="text-3xl font-extrabold text-slate-900 tracking-tight">Selamat Datang Kembali</h2>
-        <p class="mt-2 text-sm text-slate-600">
-            Masuk untuk mengakses portal Tuker.in Anda
-        </p>
-    </div>
+<div class="auth-layout">
+    <aside class="auth-aside">
+        <span class="auth-chip"><span class="h-2 w-2 rounded-full bg-lime-300"></span> Tuker.in · Hidupkan kembali</span>
+        <div><h1>Sampah hari ini, nilai untuk esok.</h1><p class="mt-4">Satu langkah sederhana untuk bumi yang lebih bersih. Kumpulkan poin dari botol plastik dan tukarkan dengan reward.</p></div>
+        <div class="relative z-10 flex items-center gap-3 text-xs font-semibold text-white/70"><span class="flex h-9 w-9 items-center justify-center rounded-full bg-white/10 text-lg text-lime-200">♻</span> Daur ulang lebih mudah bersama Tuker.in</div>
+    </aside>
 
-    <div class="mt-8 sm:mx-auto sm:w-full sm:max-w-md">
-        <div class="bg-white py-8 px-4 border border-slate-200/60 rounded-3xl shadow-xl shadow-slate-100 sm:px-10">
-            <form class="space-y-6" action="{{ route('login') }}" method="POST">
-                @csrf
+    <section class="auth-card">
+        <span class="mb-5 inline-flex h-12 w-12 items-center justify-center rounded-2xl bg-[#edf5e2] text-xl text-[#285e43]" aria-hidden="true">↗</span>
+        <h2>Selamat datang kembali</h2>
+        <p class="auth-lead">Masuk untuk melanjutkan perjalanan hijau Anda.</p>
 
-                <!-- Email Field -->
-                <div>
-                    <label for="email" class="block text-sm font-semibold text-slate-700">Alamat Email</label>
-                    <div class="mt-1">
-                        <input id="email" name="email" type="email" autocomplete="email" required value="{{ old('email') }}"
-                            class="appearance-none block w-full px-4 py-3 border border-slate-200 rounded-2xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-sm transition-all duration-200">
-                    </div>
-                    @error('email')
-                        <p class="mt-1.5 text-xs text-rose-600 font-medium">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Password Field -->
-                <div>
-                    <label for="password" class="block text-sm font-semibold text-slate-700">Password</label>
-                    <div class="mt-1">
-                        <input id="password" name="password" type="password" autocomplete="current-password" required
-                            class="appearance-none block w-full px-4 py-3 border border-slate-200 rounded-2xl placeholder-slate-400 focus:outline-none focus:ring-2 focus:ring-emerald-500/20 focus:border-emerald-500 text-sm transition-all duration-200">
-                    </div>
-                    @error('password')
-                        <p class="mt-1.5 text-xs text-rose-600 font-medium">{{ $message }}</p>
-                    @enderror
-                </div>
-
-                <!-- Remember Me -->
-                <div class="flex items-center justify-between">
-                    <div class="flex items-center">
-                        <input id="remember" name="remember" type="checkbox"
-                            class="h-4.5 w-4.5 text-emerald-600 focus:ring-emerald-500/20 border-slate-300 rounded-lg">
-                        <label for="remember" class="ml-2 block text-xs font-semibold text-slate-600">
-                            Ingat saya di perangkat ini
-                        </label>
-                    </div>
-                </div>
-
-                <!-- Submit Button -->
-                <div>
-                    <button type="submit"
-                        class="w-full flex justify-center py-3 px-4 border border-transparent rounded-2xl shadow-sm text-sm font-bold text-white bg-gradient-to-r from-emerald-600 to-teal-500 hover:from-emerald-500 hover:to-teal-400 focus:outline-none focus:ring-2 focus:ring-offset-2 focus:ring-emerald-500 transition-all duration-250 hover:shadow-md hover:shadow-emerald-500/10">
-                        Masuk ke Akun
-                    </button>
-                </div>
-            </form>
-
-            <div class="mt-6 text-center">
-                <p class="text-xs font-medium text-slate-500">
-                    Belum punya akun nasabah? 
-                    <a href="{{ route('register') }}" class="font-bold text-emerald-600 hover:text-emerald-500 transition-colors">Daftar Sekarang</a>
-                </p>
+        <form class="mt-7 space-y-5" action="{{ route('login') }}" method="POST">
+            @csrf
+            <div>
+                <label for="email" class="mb-2 block text-xs font-bold text-slate-700">Alamat email</label>
+                <input id="email" name="email" type="email" autocomplete="email" required value="{{ old('email') }}" placeholder="nama@email.com">
+                @error('email')<p class="mt-2 text-xs font-semibold text-rose-600">{{ $message }}</p>@enderror
             </div>
-        </div>
-    </div>
+            <div>
+                <div class="mb-2 flex items-center justify-between"><label for="password" class="text-xs font-bold text-slate-700">Password</label></div>
+                <input id="password" name="password" type="password" autocomplete="current-password" required placeholder="Masukkan password">
+                @error('password')<p class="mt-2 text-xs font-semibold text-rose-600">{{ $message }}</p>@enderror
+            </div>
+            <label class="flex cursor-pointer items-center gap-2 text-xs font-medium text-slate-500"><input id="remember" name="remember" type="checkbox" class="h-4 w-4 rounded border-slate-300 text-emerald-700 focus:ring-emerald-600/20"> Ingat saya di perangkat ini</label>
+            <button type="submit" class="w-full px-4 py-3 text-sm">Masuk ke akun <span class="ml-1" aria-hidden="true">→</span></button>
+        </form>
+        <p class="mt-6 border-t border-slate-100 pt-5 text-center text-xs font-medium text-slate-500">Belum punya akun nasabah? <a href="{{ route('register') }}" class="font-extrabold text-emerald-700 hover:text-emerald-900">Daftar sekarang</a></p>
+    </section>
 </div>
 @endsection
