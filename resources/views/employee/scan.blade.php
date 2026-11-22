@@ -16,6 +16,9 @@
         border-radius: 1.5rem;
         object-fit: cover;
     }
+    #reader.is-mirrored video {
+        transform: scaleX(-1);
+    }
 </style>
 @endsection
 
@@ -45,7 +48,13 @@
                 </div>
             </div>
             
-            <div id="reader" class="w-full h-full z-0"></div>
+            <div id="reader" class="w-full h-full z-0 is-mirrored"></div>
+        </div>
+        <div class="mt-3 flex items-center justify-between gap-3">
+            <p class="text-xs text-slate-500">Tampilan mirror membantu saat memakai kamera depan.</p>
+            <button type="button" id="btn-toggle-mirror" aria-pressed="true" class="shrink-0 rounded-xl border border-slate-200 px-3 py-2 text-xs font-bold text-slate-700 hover:bg-slate-50 transition-colors">
+                Mirror: Aktif
+            </button>
         </div>
 
         <!-- Manual Fallback Form (In case camera doesn't work or user has no camera) -->
@@ -153,6 +162,20 @@
 
         // Initialize html5-qrcode
         let html5QrcodeScanner = new Html5Qrcode("reader");
+        const reader = document.getElementById('reader');
+        const btnToggleMirror = document.getElementById('btn-toggle-mirror');
+        const SCAN_COOLDOWN_MS = 900;
+        const SCAN_REARM_DELAY_MS = 1000;
+        let scanInProgress = false;
+        let lastScannedKey = null;
+        let rearmTimer = null;
+        let nextScanAllowedAt = 0;
+
+        btnToggleMirror.addEventListener('click', () => {
+            const isMirrored = reader.classList.toggle('is-mirrored');
+            btnToggleMirror.setAttribute('aria-pressed', String(isMirrored));
+            btnToggleMirror.textContent = `Mirror: ${isMirrored ? 'Aktif' : 'Nonaktif'}`;
+        });
 
         // Start scanning
         function startCamera() {
@@ -173,18 +196,42 @@
 
         startCamera();
 
-        function onScanSuccess(decodedText, decodedResult) {
+        function onScanSuccess(decodedText) {
+            if (scanInProgress || Date.now() < nextScanAllowedAt) return;
+
+            const scanKey = `${scanStage}:${decodedText}`;
+            if (scanKey === lastScannedKey) {
+                clearTimeout(rearmTimer);
+                rearmTimer = null;
+                return;
+            }
+
+            clearTimeout(rearmTimer);
+            rearmTimer = null;
+            lastScannedKey = scanKey;
+            scanInProgress = true;
+
             if (scanStage === 1) {
-                // Decoded QR text
                 processUserQR(decodedText);
             } else if (scanStage === 2) {
-                // Decoded Barcode text
                 processBottleBarcode(decodedText);
             }
         }
 
-        function onScanFailure(error) {
-            // Quietly ignore scan failures
+        function onScanFailure() {
+            if (lastScannedKey === null || rearmTimer !== null) return;
+
+            // Require the code to stay out of view briefly before allowing it again.
+            rearmTimer = setTimeout(() => {
+                lastScannedKey = null;
+                rearmTimer = null;
+            }, SCAN_REARM_DELAY_MS);
+        }
+
+        function resumeAfterScan() {
+            scanInProgress = false;
+            nextScanAllowedAt = Date.now() + SCAN_COOLDOWN_MS;
+            html5QrcodeScanner.resume();
         }
 
         // Process User lookup
@@ -219,11 +266,11 @@
                     flashFrame('emerald');
                     
                     // Resume scanning for stage 2 (barcode)
-                    html5QrcodeScanner.resume();
+                    resumeAfterScan();
                 })
                 .catch(err => {
                     alert(err.message || "Nasabah tidak ditemukan.");
-                    html5QrcodeScanner.resume();
+                    resumeAfterScan();
                 });
         }
 
@@ -252,11 +299,11 @@
 
                     renderItems();
                     flashFrame('amber');
-                    html5QrcodeScanner.resume();
+                    resumeAfterScan();
                 })
                 .catch(err => {
                     alert(err.message || "Barcode tidak terdaftar.");
-                    html5QrcodeScanner.resume();
+                    resumeAfterScan();
                 });
         }
 
