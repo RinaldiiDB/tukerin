@@ -31,6 +31,12 @@ unit-test:
 integration-test:
 	php artisan test tests/Feature/Integration
 
+unit-test-junit:
+	php artisan test tests/Unit tests/Feature/Unit --log-junit=storage/logs/junit-unit.xml
+
+integration-test-junit:
+	php artisan test tests/Feature/Integration --log-junit=storage/logs/junit-integration.xml
+
 browser-test-headless:
 	vendor/bin/pest tests/Feature/Browser
 
